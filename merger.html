@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Merge PDFs</title>
+  <script src="https://cdn.jsdelivr.net/npm/pdf-lib/dist/pdf-lib.min.js"></script>
+</head>
+<body>
+
+  <h1>Merge Two PDFs</h1>
+
+  <form id="pdf-form">
+    <label for="pdf1">Select first PDF:</label>
+    <input type="file" id="pdf1" accept="application/pdf" required><br><br>
+
+    <label for="pdf2">Select second PDF:</label>
+    <input type="file" id="pdf2" accept="application/pdf" required><br><br>
+
+    <button type="submit">Merge PDFs</button>
+  </form>
+
+  <a id="download-link" style="display:none">Download Merged PDF</a>
+
+  <script>
+    document.getElementById('pdf-form').addEventListener('submit', async function (e) {
+      e.preventDefault();
+
+      const pdf1Input = document.getElementById('pdf1').files[0];
+      const pdf2Input = document.getElementById('pdf2').files[0];
+
+      if (!pdf1Input || !pdf2Input) {
+        alert("Please select both PDFs.");
+        return;
+      }
+
+      const pdf1Bytes = await pdf1Input.arrayBuffer();
+      const pdf2Bytes = await pdf2Input.arrayBuffer();
+
+      const pdf1 = await PDFLib.PDFDocument.load(pdf1Bytes);
+      const pdf2 = await PDFLib.PDFDocument.load(pdf2Bytes);
+
+      const mergedPdf = await PDFLib.PDFDocument.create();
+
+      const pdf1Pages = await mergedPdf.copyPages(pdf1, pdf1.getPageIndices());
+      pdf1Pages.forEach((page) => mergedPdf.addPage(page));
+
+      const pdf2Pages = await mergedPdf.copyPages(pdf2, pdf2.getPageIndices());
+      pdf2Pages.forEach((page) => mergedPdf.addPage(page));
+
+      const mergedPdfBytes = await mergedPdf.save();
+
+      const blob = new Blob([mergedPdfBytes], { type: 'application/pdf' });
+      const downloadLink = document.getElementById('download-link');
+      downloadLink.href = URL.createObjectURL(blob);
+      downloadLink.download = 'merged.pdf';
+      downloadLink.style.display = 'block';
+      downloadLink.textContent = 'Download Merged PDF';
+    });
+  </script>
+
+</body>
+</html>
