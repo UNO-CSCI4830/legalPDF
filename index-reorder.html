@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reorder PDF Pages</title>
+  <script src="https://cdn.jsdelivr.net/npm/pdf-lib/dist/pdf-lib.min.js"></script>
+  <script src="pdf-reorder.js" defer></script>
+  <style>
+    .pdf-preview {
+      width: 100%;
+      max-height: 500px;
+      overflow-y: scroll;
+      border: 1px solid #ccc;
+      margin-bottom: 20px;
+    }
+    .pdf-preview iframe {
+      width: 100%;
+      height: 400px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Reorder PDF Pages</h1>
+
+  <form id="pdf-reorder-form">
+    <label for="pdf-file">Select PDF:</label>
+    <input type="file" id="pdf-file" accept="application/pdf" required><br><br>
+
+    <label for="page-order">Page Order (comma-separated):</label>
+    <input type="text" id="page-order" placeholder="1,2,3,..." required><br><br>
+
+    <label for="keep-pages">Pages to Keep (comma-separated):</label>
+    <input type="text" id="keep-pages" placeholder="1,2,3,..." required><br><br>
+
+    <button type="submit">Reorder PDF</button>
+  </form>
+
+  <div>
+    <h2>Preview Reordered PDF</h2>
+    <div id="reorder-pdf-preview" class="pdf-preview"></div>
+  </div>
+
+  <a id="download-reordered-link" style="display:none">Download Reordered PDF</a>
+
+</body>
+</html>
