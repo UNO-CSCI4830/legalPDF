@@ -26,9 +26,24 @@ document.getElementById('pdf-form').addEventListener('submit', async function (e
   const mergedPdfBytes = await mergedPdf.save();
 
   const blob = new Blob([mergedPdfBytes], { type: 'application/pdf' });
+  const mergedPdfUrl = URL.createObjectURL(blob);
+
+  const mergedPreviewElement = document.getElementById('merged-pdf-preview');
+  mergedPreviewElement.innerHTML = '';
+  const iframe = document.createElement('iframe');
+  iframe.src = mergedPdfUrl;
+  mergedPreviewElement.appendChild(iframe);
+
+  const reorderButton = document.getElementById('reorder-button');
+  reorderButton.style.display = 'block';
+
   const downloadLink = document.getElementById('download-link');
-  downloadLink.href = URL.createObjectURL(blob);
+  downloadLink.href = mergedPdfUrl;
   downloadLink.download = 'merged.pdf';
   downloadLink.style.display = 'block';
   downloadLink.textContent = 'Download Merged PDF';
+
+  reorderButton.addEventListener('click', function () {
+    window.location.href = `reorder.html?pdfUrl=${encodeURIComponent(mergedPdfUrl)}`;
+  });
 });

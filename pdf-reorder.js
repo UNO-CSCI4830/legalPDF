@@ -13,7 +13,6 @@ document.getElementById('pdf-reorder-form').addEventListener('submit', async fun
   const pdfBytes = await pdfInput.arrayBuffer();
   const pdfDoc = await PDFLib.PDFDocument.load(pdfBytes);
   const newPdfDoc = await PDFLib.PDFDocument.create();
-
   const pdfPages = await pdfDoc.copyPages(pdfDoc, pdfDoc.getPageIndices());
   
   keepPagesInput.forEach((pageIndex) => {
