@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Merger</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        #previewPane { display: none; border: 1px solid #ccc; margin-top: 10px; padding: 10px; }
+        #pdfPreview { width: 100%; height: 500px; overflow: auto; border: 1px solid #ccc; }
+        #pageControls { display: flex; justify-content: space-between; }
+    </style>
+</head>
+<body>
+
+<h1>PDF Merger</h1>
+<input type="file" id="pdf1" accept="application/pdf" />
+<input type="file" id="pdf2" accept="application/pdf" />
+<button id="mergeBtn">Merge PDFs</button>
+<button id="previewBtn" style="display:none;">Preview Merged PDF</button>
+<a id="downloadBtn" style="display:none;">Download Merged PDF</a>
+
+<div id="previewPane">
+    <div id="pdfPreview"></div>
+    <div id="pageControls">
+        <button id="prevPage">Previous</button>
+        <span id="pageInfo">Page: 1</span>
+        <button id="nextPage">Next</button>
+    </div>
+</div>
+
+<script>
+    let mergedPdf = null;
+    let currentPage = 1;
+
+    document.getElementById('mergeBtn').onclick = async () => {
+        const pdf1 = document.getElementById('pdf1').files[0];
+        const pdf2 = document.getElementById('pdf2').files[0];
+
+        if (!pdf1 || !pdf2) {
+            alert('Please select two PDF files.');
+            return;
+        }
+
+        const pdfBytes1 = await pdf1.arrayBuffer();
+        const pdfBytes2 = await pdf2.arrayBuffer();
+
+        const pdfDoc1 = await PDFLib.PDFDocument.load(pdfBytes1);
+        const pdfDoc2 = await PDFLib.PDFDocument.load(pdfBytes2);
+        mergedPdf = await PDFLib.PDFDocument.create();
+
+        const pages1 = await mergedPdf.copyPages(pdfDoc1, pdfDoc1.getPageIndices());
+        const pages2 = await mergedPdf.copyPages(pdfDoc2, pdfDoc2.getPageIndices());
+
+        pages1.forEach(page => mergedPdf.addPage(page));
+        pages2.forEach(page => mergedPdf.addPage(page));
+
+        const mergedPdfBytes = await mergedPdf.save();
+        const mergedPdfBlob = new Blob([mergedPdfBytes], { type: 'application/pdf' });
+        const url = URL.createObjectURL(mergedPdfBlob);
+
+        document.getElementById('downloadBtn').href = url;
+        document.getElementById('downloadBtn').download = 'merged.pdf';
+        document.getElementById('downloadBtn').style.display = 'block';
+        document.getElementById('previewBtn').style.display = 'inline';
+    };
+
+    document.getElementById('previewBtn').onclick = () => {
+        showPage(1);
+        document.getElementById('previewPane').style.display = 'block';
+    };
+
+    document.getElementById('prevPage').onclick = () => {
+        if (currentPage > 1) {
+            showPage(--currentPage);
+        }
+    };
+
+    document.getElementById('nextPage').onclick = () => {
+        if (currentPage < mergedPdf.getPageCount()) {
+            showPage(++currentPage);
+        }
+    };
+
+    async function showPage(pageNumber) {
+        const page = await mergedPdf.save();
+        const pdfDataUri = URL.createObjectURL(new Blob([page], { type: 'application/pdf' }));
+        document.getElementById('pdfPreview').innerHTML = `<iframe src="${pdfDataUri}#page=${pageNumber}" width="100%" height="500px"></iframe>`;
+        document.getElementById('pageInfo').textContent = `Page: ${pageNumber}`;
+    }
+</script>
+
+</body>
+</html>
