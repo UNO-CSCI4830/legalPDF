@@ -19,9 +19,9 @@
         #pdfContainer {
             position: relative;
             border: 1px solid black;
-            overflow: auto; /* Enable scrolling */
-            max-height: 100vh; /* Restrict height to viewport height */
-            max-width: 100vw; /* Restrict width to viewport width */
+            overflow: auto;
+            max-height: 100vh;
+            max-width: 100vw;
         }
 
         #pdfCanvas {
@@ -40,6 +40,12 @@
             height: 30px;
             z-index: 10;
             cursor: move;
+            box-sizing: border-box;
+
+            /* Dynamic font styling */
+            font-family: Arial;
+            font-size: 14px;
+            color: black;
         }
 
         #buttonContainer {
@@ -51,7 +57,7 @@
             z-index: 1000;
         }
 
-        button {
+        button, select, input {
             margin-bottom: 10px;
         }
     </style>
@@ -64,6 +70,17 @@
     <div id="buttonContainer">
         <input type="file" id="pdf-upload" accept="application/pdf">
         <button id="savePdf">Save PDF</button>
+
+        <!-- Font controls -->
+        <select id="font-family">
+            <option value="Arial">Arial</option>
+            <option value="Times New Roman">Times New Roman</option>
+            <option value="Courier New">Courier New</option>
+            <option value="Georgia">Georgia</option>
+        </select>
+
+        <input type="number" id="font-size" placeholder="Font size" value="14" style="width: 60px;">
+        <input type="color" id="font-color" value="#000000">
     </div>
 
     <!-- Load PDF.js -->

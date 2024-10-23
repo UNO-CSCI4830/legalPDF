@@ -38,7 +38,6 @@ function renderPage(pageNum) {
             viewport: viewport
         };
 
-        // Use page.render() directly (no .then()) in some versions of PDF.js
         page.render(renderContext).then(function () {
             console.log('Page rendered successfully');
         }).catch(function (error) {
@@ -47,6 +46,18 @@ function renderPage(pageNum) {
     }).catch(error => {
         console.error('Error getting page:', error);
     });
+}
+
+// Function to apply selected font styles to the text box
+function applyFontStyles(textBox) {
+    const fontFamily = document.getElementById('font-family').value;
+    const fontSize = document.getElementById('font-size').value;
+    const fontColor = document.getElementById('font-color').value;
+
+    // Apply the styles to the text box
+    textBox.style.fontFamily = fontFamily;
+    textBox.style.fontSize = `${fontSize}px`;
+    textBox.style.color = fontColor;
 }
 
 // Handles adding a text box relative to click on the canvas
@@ -63,12 +74,20 @@ canvas.addEventListener('click', function (e) {
     textBox.style.width = '100px';
     textBox.style.height = '30px';
 
-    // Make the text box draggable
+    // Apply initial font styles
+    applyFontStyles(textBox);
+
+    // Now make the text box draggable and resizable
     makeTextBoxDraggable(textBox);
 
     // Append the text box to the PDF container
     document.getElementById('pdfContainer').appendChild(textBox);
     textBoxes.push(textBox);
+
+    // Apply font styles dynamically as the user changes them
+    document.getElementById('font-family').addEventListener('change', () => applyFontStyles(textBox));
+    document.getElementById('font-size').addEventListener('input', () => applyFontStyles(textBox));
+    document.getElementById('font-color').addEventListener('input', () => applyFontStyles(textBox));
 });
 
 // Function to make a text box draggable
@@ -76,7 +95,19 @@ function makeTextBoxDraggable(textBox) {
     let isDragging = false;
     let startX, startY;
 
+    // Draggable logic
     textBox.addEventListener('mousedown', function (e) {
+        // Check if the click is near the edges (resize area), if so, don't drag
+        const rect = textBox.getBoundingClientRect();
+        const offsetX = e.clientX - rect.left;
+        const offsetY = e.clientY - rect.top;
+
+        const isOnEdge = offsetX > rect.width - 10 || offsetY > rect.height - 10;
+        if (isOnEdge) {
+            return; // Don't drag when clicking near the resize area
+        }
+
+        // Start dragging
         isDragging = true;
         startX = e.clientX - textBox.offsetLeft;
         startY = e.clientY - textBox.offsetTop;
@@ -95,7 +126,7 @@ function makeTextBoxDraggable(textBox) {
     });
 }
 
-// Handles saving the PDF
+// Handles saving the PDF, applying font styles as well
 document.getElementById('savePdf').addEventListener('click', function () {
     html2canvas(canvas).then(function (canvasCapture) {
         const { jsPDF } = window.jspdf; // Ensure jsPDF is correctly initialized
@@ -108,7 +139,7 @@ document.getElementById('savePdf').addEventListener('click', function () {
         // Add the canvas (PDF + text) as an image to the PDF
         pdf.addImage(canvasCapture.toDataURL('image/png'), 'PNG', 0, 0, canvas.width, canvas.height);
 
-        // Add text from text boxes
+        // Add text from text boxes with font styles
         textBoxes.forEach(textBox => {
             const textValue = textBox.value;
             const textBoxRect = textBox.getBoundingClientRect();
@@ -116,6 +147,20 @@ document.getElementById('savePdf').addEventListener('click', function () {
             const textBoxX = textBoxRect.left - canvasRect.left;
             const textBoxY = textBoxRect.top - canvasRect.top + 10; // Adjust vertical position
 
+            // Get font styles from the text box
+            const fontFamily = window.getComputedStyle(textBox).fontFamily;
+            const fontSize = parseInt(window.getComputedStyle(textBox).fontSize, 10);
+            const fontColor = window.getComputedStyle(textBox).color;
+
+            // Set font family, size, and color in jsPDF
+            pdf.setFont(fontFamily);
+            pdf.setFontSize(fontSize);
+
+            // Set the text color (converting the color to RGB)
+            const rgb = fontColor.match(/\d+/g).map(Number); // Extract RGB from "rgb(r, g, b)" format
+            pdf.setTextColor(rgb[0], rgb[1], rgb[2]);
+
+            // Add the text to the PDF
             pdf.text(textValue, textBoxX, textBoxY);
         });
 
