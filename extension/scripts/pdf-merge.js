@@ -11,12 +11,10 @@ document.getElementById('pdf-form').addEventListener('submit', async function (e
 
   const pdf1Bytes = await pdf1Input.arrayBuffer();
   const pdf2Bytes = await pdf2Input.arrayBuffer();
-
   const pdf1 = await PDFLib.PDFDocument.load(pdf1Bytes);
   const pdf2 = await PDFLib.PDFDocument.load(pdf2Bytes);
 
   const mergedPdf = await PDFLib.PDFDocument.create();
-
   const pdf1Pages = await mergedPdf.copyPages(pdf1, pdf1.getPageIndices());
   pdf1Pages.forEach((page) => mergedPdf.addPage(page));
 
