@@ -1,0 +1,35 @@
+{
+  "manifest_version": 3,
+  "name": "PDF Tools Extension",
+  "version": "1.0",
+  "description": "A Chrome extension to merge, reorder, and add text to PDFs.",
+  "action": {
+    "default_popup": "html/pdfmerge.html"
+  },
+  "permissions": ["storage"],
+  "background": {
+    "service_worker": "scripts/background.js"
+  },
+  "icons": {
+    "16": "icons/logicgate.png",
+    "48": "icons/logicgate.png",
+    "128": "icons/logicgate.png"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "html/*.html",
+        "scripts/*.js",
+        "icons/logicgate.png"
+      ],
+      "matches": ["<all_urls>"]
+    }
+  ],
+  "content_scripts": [
+    {
+      "js": ["scripts/pdf-merge.js", "scripts/pdf-reorder.js", "scripts/pdf-addtext.js"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+  
+}

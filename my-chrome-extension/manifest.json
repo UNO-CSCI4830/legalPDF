@@ -1,10 +1,10 @@
 {
   "manifest_version": 3,
-  "name": "PDF Wizard",
+  "name": "Legal Splice",
   "version": "1.0",
   "description": "Edit, merge, and split PDF files",
   "action": {
-    "default_popup": "popup.html",
+    "default_popup": "pdfmerger.html",
     "default_icon": {
       "16": "pdf.png",
       "48": "pdf.png",
@@ -13,9 +13,13 @@
   },
   "permissions": [
     "storage", 
-    "activeTab"
+    "activeTab",
+    "fileSystem"
   ],
   "background": {
     "service_worker": "background.js"
+  },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'"
   }
 }
