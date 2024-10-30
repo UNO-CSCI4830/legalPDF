@@ -1,0 +1,21 @@
+{
+  "manifest_version": 3,
+  "name": "PDF Wizard",
+  "version": "1.0",
+  "description": "Edit, merge, and split PDF files",
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "pdf.png",
+      "48": "pdf.png",
+      "128": "pdf.png"
+    }
+  },
+  "permissions": [
+    "storage", 
+    "activeTab"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  }
+}
