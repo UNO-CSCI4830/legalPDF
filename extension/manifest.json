@@ -35,7 +35,8 @@
       "js": ["scripts/pdf-merge.js", 
       "scripts/pdf-reorder.js", 
       "scripts/pdf-addtext.js",
-      "scripts/pdf-lib.min.js"
+      "scripts/pdf-lib.min.js",
+      "scripts/dashboard.js"
       ],
       "matches": ["<all_urls>"]
     }

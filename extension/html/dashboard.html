@@ -3,22 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
-    <link rel="stylesheet" href="css/dashboard.css">
+    <title>PDF Tools Dashboard</title>
+    <link rel="stylesheet" href="../css/dashboard.css">
 </head>
 <body>
+    <nav>
+        <a href="pdfmerge.html" class="nav-link">Merge PDF</a>
+        <a href="pdfreorder.html" class="nav-link">Reorder PDF</a>
+        <a href="pdfaddtext.html" class="nav-link">Add Text to PDF</a>
+    </nav>
+    
+    <div id="frame-container">
+        <iframe id="frame" src="pdfmerge.html"></iframe>
+    </div>
 
-<nav>
-    <a href="pdfmerge.html" target="tool-frame">Merge PDF</a>
-    <a href="pdfreorder.html" target="tool-frame">Reorder PDF</a>
-    <a href="pdfaddtext.html" target="tool-frame">Add Text to PDF</a>
-</nav>
-
-<div class="frame-container">
-    <iframe name="tool-frame" class="tool-frame" src="pdfmerge.html"></iframe>
-    <div class="resizer"></div>
-</div>
-
-<script src="scripts/dashboard.js"></script>
+    <script src="../scripts/dashboard.js"></script>
 </body>
 </html>
