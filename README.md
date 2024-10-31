@@ -111,9 +111,9 @@ Distributed under the MIT License. See [LICENSE](LICENSE) for more information.
 
 ## Contact
 
-Mark Moser - Team Lead
-John Wischmeier - Scrum Master
-Dio Moreno - Team Developer
-Jayaun Garrett - Team Developer
+- Mark Moser - Team Lead
+- John Wischmeier - Scrum Master
+- Dio Moreno - Team Developer
+- Jayaun Garrett - Team Developer
 
 Project Link: https://github.com/UNO-CSCI4830/legalPDF
