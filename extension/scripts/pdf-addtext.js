@@ -1,8 +1,13 @@
-document.getElementById('pdf-upload').addEventListener('change', handlePdfUpload);
-let canvas = document.getElementById('pdfCanvas');
-let ctx = canvas.getContext('2d');
+// Set up PDF.js worker
+pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.worker.min.js';
+
+document.getElementById('pdf-upload').addEventListener('change', function (event) {
+    console.log('File input triggered');
+    handlePdfUpload(event);
+});
+
 let pdfDoc = null;
-let scale = 1.5; // Adjust the scale to control the zoom level of the PDF
+let scale = 1.0; // Initial scale set to 1.0 for normal size
 let textBoxes = [];
 
 // Handles PDF Upload
@@ -13,12 +18,15 @@ function handlePdfUpload(event) {
         return;
     }
 
+    console.log('Uploading PDF...');
+
     const fileReader = new FileReader();
     fileReader.onload = function () {
         const typedarray = new Uint8Array(this.result);
         pdfjsLib.getDocument(typedarray).promise.then(function (pdf) {
             pdfDoc = pdf;
-            renderPage(1); // Render first page of PDF
+            console.log(`PDF loaded with ${pdfDoc.numPages} pages.`);
+            renderAllPages(); // Render all pages of the PDF
         }).catch(error => {
             console.error('Error loading PDF:', error);
         });
@@ -26,26 +34,46 @@ function handlePdfUpload(event) {
     fileReader.readAsArrayBuffer(file);
 }
 
-// Renders a specific page of the PDF
-function renderPage(pageNum) {
-    pdfDoc.getPage(pageNum).then(function (page) {
-        let viewport = page.getViewport({ scale: scale });
-        canvas.width = viewport.width;
-        canvas.height = viewport.height;
+// Renders all pages with dynamic scaling
+function renderAllPages() {
+    if (!pdfDoc) {
+        console.error('PDF document is not loaded.');
+        return;
+    }
 
-        let renderContext = {
-            canvasContext: ctx,
-            viewport: viewport
-        };
+    const pdfContainer = document.getElementById('pdfContainer');
+    pdfContainer.innerHTML = ''; // Clear existing content
 
-        page.render(renderContext).then(function () {
-            console.log('Page rendered successfully');
-        }).catch(function (error) {
-            console.error('Error rendering page:', error);
+    const containerWidth = pdfContainer.clientWidth;
+
+    for (let pageNum = 1; pageNum <= pdfDoc.numPages; pageNum++) {
+        pdfDoc.getPage(pageNum).then(function (page) {
+            const viewport = page.getViewport({ scale: 1.0 });
+            const scale = containerWidth / viewport.width; // Calculate scale to fit container width
+            const scaledViewport = page.getViewport({ scale: scale });
+
+            const canvas = document.createElement('canvas');
+            canvas.classList.add('page-canvas');
+            canvas.width = scaledViewport.width;
+            canvas.height = scaledViewport.height;
+
+            const ctx = canvas.getContext('2d');
+            const renderContext = {
+                canvasContext: ctx,
+                viewport: scaledViewport
+            };
+
+            pdfContainer.appendChild(canvas);
+
+            page.render(renderContext).promise.then(() => {
+                console.log(`Page ${pageNum} rendered successfully at scale ${scale}`);
+            }).catch(error => {
+                console.error(`Error rendering page ${pageNum}:`, error);
+            });
+        }).catch(error => {
+            console.error(`Error getting page ${pageNum}:`, error);
         });
-    }).catch(error => {
-        console.error('Error getting page:', error);
-    });
+    }
 }
 
 // Function to apply selected font styles to the text box
@@ -61,53 +89,43 @@ function applyFontStyles(textBox) {
 }
 
 // Handles adding a text box relative to click on the canvas
-canvas.addEventListener('click', function (e) {
-    const canvasRect = canvas.getBoundingClientRect();
-    const x = e.clientX - canvasRect.left;
-    const y = e.clientY - canvasRect.top;
+document.getElementById('pdfContainer').addEventListener('click', function (e) {
+    if (e.target.tagName === 'CANVAS') {
+        const canvasRect = e.target.getBoundingClientRect();
+        const x = (e.clientX - canvasRect.left) / scale; // Adjust for scale
+        const y = (e.clientY - canvasRect.top) / scale;  // Adjust for scale
 
-    let textBox = document.createElement('textarea');
-    textBox.classList.add('text-box');
-    textBox.style.left = `${x}px`;
-    textBox.style.top = `${y}px`;
-    textBox.style.position = 'absolute';
-    textBox.style.width = '100px';
-    textBox.style.height = '30px';
+        let textBox = document.createElement('textarea');
+        textBox.classList.add('text-box');
+        textBox.style.left = `${x}px`;
+        textBox.style.top = `${y}px`;
+        textBox.style.position = 'absolute';
+        textBox.style.width = '100px';
+        textBox.style.height = '30px';
+        textBox.style.resize = 'both'; // Make the text box resizable
 
-    // Apply initial font styles
-    applyFontStyles(textBox);
+        applyFontStyles(textBox);
+        makeTextBoxDraggable(textBox);
 
-    // Now make the text box draggable and resizable
-    makeTextBoxDraggable(textBox);
-
-    // Append the text box to the PDF container
-    document.getElementById('pdfContainer').appendChild(textBox);
-    textBoxes.push(textBox);
-
-    // Apply font styles dynamically as the user changes them
-    document.getElementById('font-family').addEventListener('change', () => applyFontStyles(textBox));
-    document.getElementById('font-size').addEventListener('input', () => applyFontStyles(textBox));
-    document.getElementById('font-color').addEventListener('input', () => applyFontStyles(textBox));
+        document.getElementById('pdfContainer').appendChild(textBox);
+        textBoxes.push(textBox);
+    }
 });
 
 // Function to make a text box draggable
 function makeTextBoxDraggable(textBox) {
+    textBox.style.resize = 'both';
     let isDragging = false;
     let startX, startY;
 
-    // Draggable logic
     textBox.addEventListener('mousedown', function (e) {
-        // Check if the click is near the edges (resize area), if so, don't drag
         const rect = textBox.getBoundingClientRect();
         const offsetX = e.clientX - rect.left;
         const offsetY = e.clientY - rect.top;
 
         const isOnEdge = offsetX > rect.width - 10 || offsetY > rect.height - 10;
-        if (isOnEdge) {
-            return; // Don't drag when clicking near the resize area
-        }
+        if (isOnEdge) return; // Allow resizing without interfering with dragging
 
-        // Start dragging
         isDragging = true;
         startX = e.clientX - textBox.offsetLeft;
         startY = e.clientY - textBox.offsetTop;
@@ -126,47 +144,73 @@ function makeTextBoxDraggable(textBox) {
     });
 }
 
-// Handles saving the PDF, applying font styles as well
+
+// Handles saving the PDF with text boxes
 document.getElementById('savePdf').addEventListener('click', function () {
-    html2canvas(canvas).then(function (canvasCapture) {
-        const { jsPDF } = window.jspdf; // Ensure jsPDF is correctly initialized
-        const pdf = new jsPDF({
-            orientation: 'portrait',
-            unit: 'pt',
-            format: [canvas.width, canvas.height]
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF({
+        orientation: 'portrait',
+        unit: 'pt',
+        format: 'a4' // Adjust format as needed
+    });
+
+    const pdfContainer = document.getElementById('pdfContainer');
+    const pageCanvases = document.querySelectorAll('.page-canvas');
+
+    if (pageCanvases.length === 0) {
+        console.error('No canvases found for saving');
+        return;
+    }
+
+    pageCanvases.forEach((canvas, pageIndex) => {
+        html2canvas(canvas, { scale: 1 }).then(function (canvasCapture) {
+            const imgWidth = pdf.internal.pageSize.getWidth();
+            const imgHeight = (canvasCapture.height * imgWidth) / canvasCapture.width; // Maintain aspect ratio
+
+            if (pageIndex > 0) {
+                pdf.addPage(); // Add a new page for each subsequent canvas
+            }
+
+            pdf.addImage(
+                canvasCapture.toDataURL('image/png'),
+                'PNG',
+                0,
+                0,
+                imgWidth,
+                imgHeight
+            );
+
+            // Capture and position text boxes relative to the canvas
+            textBoxes.forEach(textBox => {
+                const textBoxRect = textBox.getBoundingClientRect();
+                const canvasRect = canvas.getBoundingClientRect();
+
+                // Ensure the text box is part of the current canvas area
+                if (textBoxRect.top >= canvasRect.top && textBoxRect.bottom <= canvasRect.bottom) {
+                    const x = ((textBoxRect.left - canvasRect.left) / canvas.width) * imgWidth;
+                    const y = ((textBoxRect.top - canvasRect.top) / canvas.height) * imgHeight;
+
+                    const fontFamily = window.getComputedStyle(textBox).fontFamily;
+                    const fontSize = parseInt(window.getComputedStyle(textBox).fontSize, 10);
+                    const fontColor = window.getComputedStyle(textBox).color;
+
+                    pdf.setFont(fontFamily);
+                    pdf.setFontSize(fontSize);
+                    const rgb = fontColor.match(/\d+/g).map(Number);
+                    pdf.setTextColor(rgb[0], rgb[1], rgb[2]);
+
+                    // Add the text content to the PDF at the correct position
+                    pdf.text(textBox.value, x, y);
+                }
+            });
+
+            // Save the PDF after the last page is processed
+            if (pageIndex === pageCanvases.length - 1) {
+                pdf.save('edited.pdf');
+                console.log('PDF saved successfully');
+            }
+        }).catch(function (error) {
+            console.error('Error capturing canvas:', error);
         });
-        
-        // Add the canvas (PDF + text) as an image to the PDF
-        pdf.addImage(canvasCapture.toDataURL('image/png'), 'PNG', 0, 0, canvas.width, canvas.height);
-
-        // Add text from text boxes with font styles
-        textBoxes.forEach(textBox => {
-            const textValue = textBox.value;
-            const textBoxRect = textBox.getBoundingClientRect();
-            const canvasRect = canvas.getBoundingClientRect();
-            const textBoxX = textBoxRect.left - canvasRect.left;
-            const textBoxY = textBoxRect.top - canvasRect.top + 10; // Adjust vertical position
-
-            // Get font styles from the text box
-            const fontFamily = window.getComputedStyle(textBox).fontFamily;
-            const fontSize = parseInt(window.getComputedStyle(textBox).fontSize, 10);
-            const fontColor = window.getComputedStyle(textBox).color;
-
-            // Set font family, size, and color in jsPDF
-            pdf.setFont(fontFamily);
-            pdf.setFontSize(fontSize);
-
-            // Set the text color (converting the color to RGB)
-            const rgb = fontColor.match(/\d+/g).map(Number); // Extract RGB from "rgb(r, g, b)" format
-            pdf.setTextColor(rgb[0], rgb[1], rgb[2]);
-
-            // Add the text to the PDF
-            pdf.text(textValue, textBoxX, textBoxY);
-        });
-
-        // Save the edited PDF
-        pdf.save('edited.pdf');
-    }).catch(function (error) {
-        console.error('Error capturing canvas:', error);
     });
 });

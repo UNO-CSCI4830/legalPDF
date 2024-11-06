@@ -19,14 +19,17 @@
         #pdfContainer {
             position: relative;
             border: 1px solid black;
-            overflow: auto;
-            max-height: 100vh;
-            max-width: 100vw;
+            overflow-y: auto; /* Enable vertical scrolling */
+            max-height: 80vh; /* Adjust as necessary */
+            width: 70%; /* Adjust as necessary */
+            margin: 0 auto; /* Center container */
+            display: flex;
+            flex-direction: column; /* Stack canvases vertically */
+            align-items: center; /* Center align pages */
         }
 
-        #pdfCanvas {
-            position: relative;
-            z-index: 1;
+        .page-canvas {
+            margin-bottom: 20px; /* Space between pages */
         }
 
         .text-box {
@@ -36,13 +39,9 @@
             resize: both;
             overflow: hidden;
             padding: 5px;
-            width: 100px;
-            height: 30px;
             z-index: 10;
             cursor: move;
             box-sizing: border-box;
-
-            /* Dynamic font styling */
             font-family: Arial;
             font-size: 14px;
             color: black;
@@ -90,10 +89,7 @@
     <!-- Load jsPDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
     <!-- Link to external script file -->
-    <script src="script.js"></script>
-
-    <script src="../scripts/pdf-addtext.js"></script>
-    <link rel="stylesheet" href="../css/pdfaddtext.css">
+    <script src="GitHub\legalPDF\extension\scripts\pdf-addtext.js"></script>
 
 </body>
 </html>
