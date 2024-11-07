@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Editor</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        #pdfContainer {
+            position: relative;
+            border: 1px solid black;
+            overflow-y: auto; /* Enable vertical scrolling */
+            max-height: 80vh; /* Adjust as necessary */
+            width: 70%; /* Adjust as necessary */
+            margin: 0 auto; /* Center container */
+            display: flex;
+            flex-direction: column; /* Stack canvases vertically */
+            align-items: center; /* Center align pages */
+        }
+
+        .page-canvas {
+            margin-bottom: 20px; /* Space between pages */
+        }
+
+        .text-box {
+            position: absolute;
+            border: 1px solid blue;
+            background-color: rgba(255, 255, 255, 0.5);
+            resize: both;
+            overflow: hidden;
+            padding: 5px;
+            z-index: 10;
+            cursor: move;
+            box-sizing: border-box;
+            font-family: Arial;
+            font-size: 14px;
+            color: black;
+        }
+
+        #buttonContainer {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            z-index: 1000;
+        }
+
+        button, select, input {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="pdfContainer">
+        <canvas id="pdfCanvas"></canvas>
+    </div>
+    <div id="buttonContainer">
+        <input type="file" id="pdf-upload" accept="application/pdf">
+        <button id="savePdf">Save PDF</button>
+
+        <!-- Font controls -->
+        <select id="font-family">
+            <option value="Arial">Arial</option>
+            <option value="Times New Roman">Times New Roman</option>
+            <option value="Courier New">Courier New</option>
+            <option value="Georgia">Georgia</option>
+        </select>
+
+        <input type="number" id="font-size" placeholder="Font size" value="14" style="width: 60px;">
+        <input type="color" id="font-color" value="#000000">
+    </div>
+
+    <!-- Load PDF.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
+    <!-- Load html2canvas -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <!-- Load jsPDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <!-- Link to external script file -->
+    <script src="GitHub\legalPDF\extension\scripts\pdf-addtext.js"></script>
+
+</body>
+</html>
