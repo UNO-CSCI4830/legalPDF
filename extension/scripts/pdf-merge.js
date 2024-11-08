@@ -32,16 +32,17 @@ document.getElementById('pdf-form').addEventListener('submit', async function (e
   iframe.src = mergedPdfUrl;
   mergedPreviewElement.appendChild(iframe);
 
-  const reorderButton = document.getElementById('reorder-button');
-  reorderButton.style.display = 'block';
-
-  const downloadLink = document.getElementById('download-link');
-  downloadLink.href = mergedPdfUrl;
-  downloadLink.download = 'merged.pdf';
-  downloadLink.style.display = 'block';
-  downloadLink.textContent = 'Download Merged PDF';
-
-  reorderButton.addEventListener('click', function () {
-    window.location.href = `reorder.html?pdfUrl=${encodeURIComponent(mergedPdfUrl)}`;
+  const downloadAsIsButton = document.getElementById('download-as-is');
+  downloadAsIsButton.style.display = 'block';
+  downloadAsIsButton.addEventListener('click', function () {
+    const a = document.createElement('a');
+    a.href = mergedPdfUrl;
+    a.download = 'merged.pdf';
+    a.click();
   });
+});
+
+document.getElementById('reset-button').addEventListener('click', function () {
+  document.getElementById('merged-pdf-preview').innerHTML = '';
+  document.getElementById('download-as-is').style.display = 'none';
 });

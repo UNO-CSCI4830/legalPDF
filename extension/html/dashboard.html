@@ -1,22 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PDF Tools Dashboard</title>
-    <link rel="stylesheet" href="../css/dashboard.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PDF Tools Dashboard</title>
+  <link rel="stylesheet" href="../css/dashboard.css">
 </head>
 <body>
+  <header>
     <nav>
-        <a href="pdfmerge.html" class="nav-link">Merge PDF</a>
-        <a href="pdfreorder.html" class="nav-link">Reorder PDF</a>
-        <a href="pdfaddtext.html" class="nav-link">Add Text to PDF</a>
+      <ul>
+        <li><a href="#" id="mergeLink">Merge PDFs</a></li>
+        <li><a href="#" id="reorderLink">Reorder PDFs</a></li>
+        <li><a href="#" id="addTextLink">Add Text to PDFs</a></li>
+      </ul>
     </nav>
-    
-    <div id="frame-container">
-        <iframe id="frame" src="pdfmerge.html"></iframe>
-    </div>
+  </header>
 
-    <script src="../scripts/dashboard.js"></script>
+  <main id="content"></main>
+
+  <script src="../scripts/dashboard.js"></script>
 </body>
 </html>

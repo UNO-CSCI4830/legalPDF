@@ -2,16 +2,13 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, content-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PDF Reorder Tool</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.worker.min.js"></script> 
-    <!-- <script src="../scripts/pdf-lib.min.js"></script>
+    <link rel="stylesheet" href="../css/pdfreorder.css">
+    <script src="../scripts/pdf.worker.min.js"></script>
     <script src="../scripts/pdf.min.js"></script>
-    <script src="../scripts/pdf.worker.min.js"></script>-->
-    <script src="../scripts/pdf-reorder.js"></script>
-    <link rel="stylesheet" href="../css/pdfreorder.css"> 
+    <script src="../scripts/pdf-lib.min.js"></script>
+    <script defer src="../scripts/pdf-reorder.js"></script>
 </head>
 <body>
 
@@ -23,11 +20,9 @@
 <div id="preview">
     <canvas id="previewCanvas"></canvas>
     <div id="pageInfo">Page <span id="currentPage">1</span> of <span id="totalPages">0</span></div>
-    <button id="prevBtn" onclick="changePage(-1)" style="display:none;">Previous</button>
-    <button id="nextBtn" onclick="changePage(1)" style="display:none;">Next</button>
+    <button id="prevBtn" style="display:none;">Previous</button>
+    <button id="nextBtn" style="display:none;">Next</button>
 </div>
-
-
 
 </body>
 </html>

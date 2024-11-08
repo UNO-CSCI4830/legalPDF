@@ -1,13 +1,24 @@
-const frame = document.getElementById('frame');
-
-const navLinks = document.querySelectorAll('.nav-link');
-navLinks.forEach(link => {
-    link.addEventListener('click', function(event) {
-        event.preventDefault();
-        const url = this.getAttribute('href');
-        frame.src = url;
-    });
-});
-
-frame.style.width = '100%';
-frame.style.height = '100vh';
+function loadPage(page) {
+    const contentDiv = document.getElementById('content');
+    fetch(page)
+      .then(response => response.text())
+      .then(html => {
+        contentDiv.innerHTML = html;
+      })
+      .catch(error => {
+        contentDiv.innerHTML = "<p>Error loading page.</p>";
+      });
+  }
+  
+  document.getElementById('mergeLink').addEventListener('click', function() {
+    loadPage('../html/pdfmerge.html');
+  });
+  
+  document.getElementById('reorderLink').addEventListener('click', function() {
+    loadPage('../html/pdfreorder.html');
+  });
+  
+  document.getElementById('addTextLink').addEventListener('click', function() {
+    loadPage('../html/pdfaddtext.html');
+  });
+  
