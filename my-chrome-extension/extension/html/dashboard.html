@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Dashboard</title>
+    <style>
+        /* Set a fixed size for the main popup */
+        body {
+            width: 200px; /* Adjust to your desired width */
+            height: 200px; /* Adjust to your desired height */
+            margin: 0;
+            padding: 0;
+            overflow-y: auto; /* Allows scrolling if content overflows */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .link-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: blue;
+        }
+    </style>
+</head>
+<body>
+    <div class="link-container">
+        <a href="../html/pdfreorder.html" class="nav-link">PDF Reorder</a>
+        <a href="../html/pdfmerge.html" class="nav-link">PDF Merge</a>
+        <a href="../html/pdfaddtext.html" class="nav-link">PDF Add Text</a>
+    </div>
+</body>
+</html>
