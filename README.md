@@ -41,49 +41,38 @@ To get a local copy up and running follow these simple steps.
 
 Chrome browser is required.
 
--npm
-
 ```sh
-npm install npm@latest -g
+https://www.google.com/chrome/
 ```
 
 <!-- Installation -->
 
 ## Installation
 
-Clone the repo
+Clone the repository
 
 ```sh
 git clone https://github.com/UNO-CSCI4830/legalPDF.git
 ```
-Install NPM packages
+Download and install Chrome
+
+Open Chrome Extensions
 
 ```sh
-npm install
+chrome://extensions
 ```
 
-Run Test
+Enable Developer Mode in the upper right corner of the page
 
-```sh
-npm run test
-```
+Click Load Unpacked and browse to the extension folder in the repository
 
-Start the project in development
-
-```sh
-npm run dev
-```
+Load the extension
 
 <!-- Usage -->
 
 ## Usage
 
-To run the project, use the following command:
-
-```sh
-npm start
-```
-For detailed examples, check the documentation.
+To run the project, click the PDF Tools extension icon
 
 <!-- Contributing -->
 
