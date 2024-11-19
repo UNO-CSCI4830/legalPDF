@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Editor</title>
+    <style>
+        /* Set fixed dimensions for the popup */
+        body {
+            width: 400px; /* Set desired width */
+            height: 200px; /* Set desired height */
+            margin: 0;
+            padding: 0;
+            overflow-y: auto; /* Enable vertical scrolling if needed */
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            box-sizing: border-box;
+        }
+
+        #pdfContainer {
+            position: relative;
+            border: 1px solid black;
+            overflow-y: auto;
+            max-height: 80vh;
+            width: 90%; /* Reduced width to fit better within the popup */
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .page-canvas {
+            margin-bottom: 20px;
+        }
+
+        .text-box {
+            position: absolute;
+            border: 1px solid blue;
+            background-color: rgba(255, 255, 255, 0.5);
+            resize: both;
+            overflow: hidden;
+            padding: 5px;
+            z-index: 10;
+            cursor: move;
+            box-sizing: border-box;
+            font-family: Arial;
+            font-size: 14px;
+            color: black;
+        }
+
+        #buttonContainer {
+            position: relative;
+            top: 20px;
+            right: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        button, select, input {
+            margin-bottom: 10px;
+            width: 100%; /* Make inputs stretch to fit the container */
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="link-container">
+            <a href="../html/pdfreorder.html" class="nav-link">PDF Reorder</a>
+            <a href="../html/pdfmerge.html" class="nav-link">PDF Merge</a>
+            <a href="../html/pdfaddtext.html" class="nav-link">PDF Add Text</a>
+        </div>
+    </div>
+    <div id="pdfContainer">
+        <canvas id="pdfCanvas"></canvas>
+    </div>
+    <div id="buttonContainer">
+        <input type="file" id="pdf-upload" accept="application/pdf">
+        <button id="savePdf">Save PDF</button>
+
+        <!-- Font controls -->
+        <select id="font-family">
+            <option value="Arial">Arial</option>
+            <option value="Times New Roman">Times New Roman</option>
+            <option value="Courier New">Courier New</option>
+            <option value="Georgia">Georgia</option>
+        </select>
+
+        <input type="number" id="font-size" placeholder="Font size" value="14">
+        <input type="color" id="font-color" value="#000000">
+    </div>
+
+    <!-- Load PDF.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
+    <!-- Load html2canvas -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <!-- Load jsPDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <!-- Link to external script file -->
+    <script src="GitHub/legalPDF/extension/scripts/pdf-addtext.js"></script>
+
+</body>
+</html>
