@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Merge PDFs with Preview</title>
-    <script src="../scripts/pdf-lib.min.js"></script>
-    <script src="../scripts/pdf-merge.js" defer></script>
+    <script src="./scripts/pdf-lib.min.js"></script>
+    <script src="./scripts/pdf-merge.js" defer></script>
     <link rel="stylesheet" href="../css/pdfmerge.css">
 </head>
 <body>
@@ -40,19 +40,6 @@
     <button id="reorder-button" style="display:none">Reorder Merged PDF</button>
     <a id="download-link" style="display:none">Download Merged PDF</a>
     <button id="download-as-is" style="display:none">Download as is</button>
-
-    <script>
-        document.getElementById('reset-button').addEventListener('click', function () {
-            document.getElementById('pdf1').value = '';
-            document.getElementById('pdf2').value = '';
-            document.getElementById('pdf1-preview').innerHTML = '';
-            document.getElementById('pdf2-preview').innerHTML = '';
-            document.getElementById('merged-pdf-preview').innerHTML = '';
-            document.getElementById('reorder-button').style.display = 'none';
-            document.getElementById('download-link').style.display = 'none';
-            document.getElementById('download-as-is').style.display = 'none';
-        });
-    </script>
 
     <nav>
         <button onclick="window.location.href='pdfmerge.html'">Merge PDF</button>

@@ -8,7 +8,7 @@
   },
   "permissions": ["storage"],
   "background": {
-    "service_worker": "scripts/background.js"
+    "service_worker": "/html/scripts/background.js"
   },
   "icons": {
     "16": "icons/logicgate.png",
@@ -27,9 +27,12 @@
   ],
   "content_scripts": [
     {
-      "js": ["scripts/pdf-merge.js", "scripts/pdf-reorder.js", "scripts/pdf-addtext.js"],
+      "js": ["/html/scripts/pdf-merge.js", "/html/scripts/pdf-reorder.js", "/html/scripts/pdf-addtext.js"],
       "matches": ["<all_urls>"]
     }
-  ]
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self' ; object-src 'self';"
+  }
   
 }

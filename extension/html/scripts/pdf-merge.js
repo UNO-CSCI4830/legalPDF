@@ -1,3 +1,4 @@
+// Event listener for the form submission
 document.getElementById('pdf-form').addEventListener('submit', async function (e) {
   e.preventDefault();
 
@@ -44,4 +45,29 @@ document.getElementById('pdf-form').addEventListener('submit', async function (e
   reorderButton.addEventListener('click', function () {
     window.location.href = `reorder.html?pdfUrl=${encodeURIComponent(mergedPdfUrl)}`;
   });
+});
+
+// Event listener for the reset button
+document.getElementById('reset-button').addEventListener('click', function () {
+  document.getElementById('pdf1').value = '';
+  document.getElementById('pdf2').value = '';
+  document.getElementById('pdf1-preview').innerHTML = '';
+  document.getElementById('pdf2-preview').innerHTML = '';
+  document.getElementById('merged-pdf-preview').innerHTML = '';
+  document.getElementById('reorder-button').style.display = 'none';
+  document.getElementById('download-link').style.display = 'none';
+  document.getElementById('download-as-is').style.display = 'none';
+});
+
+// Navigation buttons functionality
+document.getElementById('merge-pdf-button').addEventListener('click', function () {
+  window.location.href = 'pdfmerge.html';
+});
+
+document.getElementById('reorder-pdf-button').addEventListener('click', function () {
+  window.location.href = 'pdfreorder.html';
+});
+
+document.getElementById('add-text-pdf-button').addEventListener('click', function () {
+  window.location.href = 'pdfaddtext.html';
 });
