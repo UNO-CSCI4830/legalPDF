@@ -29,11 +29,15 @@ function displayPages() {
         div.classList.add('pdf-page');
         div.innerHTML = `
             Page ${pageIndex + 1}
-            <button onclick="movePage(${i}, -1)">↑</button>
-            <button onclick="movePage(${i}, 1)">↓</button>
-            <button onclick="removePage(${i})">Remove</button>
+            <button class="move-up-btn">↑</button>
+            <button class="move-down-btn">↓</button>
+            <button class="remove-btn">Remove</button>
         `;
         pdfList.appendChild(div);
+
+        div.querySelector('.move-up-btn').addEventListener('click', () => movePage(i, -1));
+        div.querySelector('.move-down-btn').addEventListener('click', () => movePage(i, 1));
+        div.querySelector('.remove-btn').addEventListener('click', () => removePage(i));
     });
 }
 
@@ -79,7 +83,6 @@ function changePage(direction) {
 
 async function previewPage(index) {
     const pageIndex = pageOrder[index];
-
     const pdfBytes = await originalPdfDoc.save();
     const blob = new Blob([pdfBytes], { type: 'application/pdf' });
     const url = URL.createObjectURL(blob);
@@ -124,4 +127,29 @@ document.getElementById('downloadBtn').addEventListener('click', async () => {
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+
+    if (prevBtn) {
+        prevBtn.addEventListener('click', function () {
+            changePage(-1);
+        });
+    }
+    
+    if (nextBtn) {
+        nextBtn.addEventListener('click', function () {
+            changePage(1);
+        });
+    }
+
+    const resetButton = document.getElementById('reset-button');
+    if (resetButton) {
+        resetButton.addEventListener('click', function () {
+            document.getElementById('merged-pdf-preview').innerHTML = '';
+            document.getElementById('download-as-is').style.display = 'none';
+        });
+    }
 });

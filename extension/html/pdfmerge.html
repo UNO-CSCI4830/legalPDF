@@ -9,6 +9,13 @@
     <link rel="stylesheet" href="../css/pdfmerge.css">
 </head>
 <body>
+    <div class="container">
+        <div class="link-container">
+            <a href="../html/pdfreorder.html" class="nav-link">PDF Reorder</a>
+            <a href="../html/pdfmerge.html" class="nav-link">PDF Merge</a>
+            <a href="../html/pdfaddtext.html" class="nav-link">PDF Add Text</a>
+        </div>
+    </div>
     <h1>Merge Two PDFs</h1>
 
     <form id="pdf-form">
@@ -23,41 +30,10 @@
     </form>
 
     <div>
-        <h2>Preview PDF 1</h2>
-        <div id="pdf1-preview" class="pdf-preview"></div>
-    </div>
-
-    <div>
-        <h2>Preview PDF 2</h2>
-        <div id="pdf2-preview" class="pdf-preview"></div>
-    </div>
-
-    <div>
         <h2>Preview Merged PDF</h2>
         <div id="merged-pdf-preview" class="pdf-preview"></div>
     </div>
 
-    <button id="reorder-button" style="display:none">Reorder Merged PDF</button>
-    <a id="download-link" style="display:none">Download Merged PDF</a>
-    <button id="download-as-is" style="display:none">Download as is</button>
-
-    <script>
-        document.getElementById('reset-button').addEventListener('click', function () {
-            document.getElementById('pdf1').value = '';
-            document.getElementById('pdf2').value = '';
-            document.getElementById('pdf1-preview').innerHTML = '';
-            document.getElementById('pdf2-preview').innerHTML = '';
-            document.getElementById('merged-pdf-preview').innerHTML = '';
-            document.getElementById('reorder-button').style.display = 'none';
-            document.getElementById('download-link').style.display = 'none';
-            document.getElementById('download-as-is').style.display = 'none';
-        });
-    </script>
-
-    <nav>
-        <button onclick="window.location.href='pdfmerge.html'">Merge PDF</button>
-        <button onclick="window.location.href='pdfreorder.html'">Reorder PDF</button>
-        <button onclick="window.location.href='pdfaddtext.html'">Add Text to PDF</button>
-    </nav>
+    <button id="download-as-is" style="display:none">Download Merged PDF</button>
 </body>
 </html>
