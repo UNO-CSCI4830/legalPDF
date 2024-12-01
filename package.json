@@ -1,0 +1,28 @@
+{
+    "name": "legal-pdf-extension",
+    "version": "1.0.0",
+    "description": "A Chrome extension to handle PDF merging and other operations",
+    "main": "index.js",
+    "scripts": {
+        "test": "jest",
+        "test:report": "jest --json --outputFile=results.json"
+    },
+    "keywords": [
+        "chrome-extension",
+        "pdf",
+        "merge",
+        "javascript"
+    ],
+    "author": "Mark",
+    "license": "ISC",
+    "devDependencies": {
+        "jest": "^29.0.0",
+        "jest-environment-jsdom": "^29.0.0"
+    },
+    "dependencies": {
+        "pdf-lib": "^1.17.1"
+    },
+    "jest": {
+        "testEnvironment": "jsdom"
+    }
+}
