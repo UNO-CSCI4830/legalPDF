@@ -1,29 +1,69 @@
+let PDFDocument;
+
+if (typeof module !== 'undefined' && module.exports) {
+    // for testing purposes otherwise jest fails
+    PDFDocument = require('pdf-lib').PDFDocument;
+} else {
+    PDFDocument = PDFLib.PDFDocument;
+}
+
+
 let originalPdfDoc;
-let rearrangedPdfDoc;
 let pageOrder = [];
 let currentPageIndex = 0;
 
-document.getElementById('fileInput').addEventListener('change', async (event) => {
-    const file = event.target.files[0];
-    if (file && file.type === "application/pdf") {
-        const arrayBuffer = await file.arrayBuffer();
-        originalPdfDoc = await PDFLib.PDFDocument.load(arrayBuffer);
-        const numPages = originalPdfDoc.getPageCount();
-        pageOrder = Array.from({ length: numPages }, (_, i) => i);
-
-        displayPages();
-        updatePageInfo();
-        document.getElementById('downloadBtn').style.display = 'block';
-        document.getElementById('preview').style.display = 'block';
-    } else {
-        alert("Please upload a valid PDF file.");
+async function initializePDFReorder() {
+    const fileInput = document.getElementById('fileInput');
+    if (!fileInput) {
+        console.error('File input element not found.');
+        return;
     }
-});
+
+    fileInput.addEventListener('change', async (event) => {
+        const file = event.target.files[0];
+        if (!file || file.type !== 'application/pdf') {
+            alert('Please upload a valid PDF file.');
+            return;
+        }
+
+        try {
+            const arrayBuffer = await file.arrayBuffer();
+            originalPdfDoc = await PDFDocument.load(arrayBuffer);
+            const numPages = originalPdfDoc.getPageCount();
+            pageOrder = Array.from({ length: numPages }, (_, i) => i);
+
+            displayPages();
+            updatePageInfo();
+            document.getElementById('downloadBtn').style.display = 'block';
+            document.getElementById('preview').style.display = 'block';
+        } catch (error) {
+            console.error('Error loading PDF:', error);
+            alert('Failed to load the PDF. Please try another file.');
+        }
+    });
+
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+
+    if (prevBtn) {
+        prevBtn.addEventListener('click', () => changePage(-1));
+    }
+
+    if (nextBtn) {
+        nextBtn.addEventListener('click', () => changePage(1));
+    }
+
+    const downloadBtn = document.getElementById('downloadBtn');
+    if (downloadBtn) {
+        downloadBtn.addEventListener('click', downloadReorderedPdf);
+    }
+}
+
 
 function displayPages() {
     const pdfList = document.getElementById('pdfList');
     pdfList.innerHTML = '';
-    
+
     pageOrder.forEach((pageIndex, i) => {
         const div = document.createElement('div');
         div.classList.add('pdf-page');
@@ -34,7 +74,6 @@ function displayPages() {
             <button class="remove-btn">Remove</button>
         `;
         pdfList.appendChild(div);
-
         div.querySelector('.move-up-btn').addEventListener('click', () => movePage(i, -1));
         div.querySelector('.move-down-btn').addEventListener('click', () => movePage(i, 1));
         div.querySelector('.remove-btn').addEventListener('click', () => removePage(i));
@@ -58,11 +97,22 @@ function removePage(index) {
 
 function updatePageInfo() {
     const totalPages = pageOrder.length;
-    document.getElementById('totalPages').textContent = totalPages;
-    document.getElementById('currentPage').textContent = currentPageIndex + 1;
+    const currentPageElement = document.getElementById('currentPage');
+    const totalPagesElement = document.getElementById('totalPages');
 
-    document.getElementById('prevBtn').style.display = currentPageIndex > 0 ? 'inline' : 'none';
-    document.getElementById('nextBtn').style.display = currentPageIndex < totalPages - 1 ? 'inline' : 'none';
+    if (currentPageElement && totalPagesElement) {
+        currentPageElement.textContent = totalPages > 0 ? currentPageIndex + 1 : 0;
+        totalPagesElement.textContent = totalPages;
+    }
+
+    // Show or hide navigation buttons
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+
+    if (prevBtn && nextBtn) {
+        prevBtn.style.display = currentPageIndex > 0 ? 'block' : 'none';
+        nextBtn.style.display = currentPageIndex < totalPages - 1 ? 'block' : 'none';
+    }
 
     if (totalPages > 0) {
         previewPage(currentPageIndex);
@@ -72,6 +122,7 @@ function updatePageInfo() {
         context.clearRect(0, 0, canvas.width, canvas.height);
     }
 }
+
 
 function changePage(direction) {
     const newIndex = currentPageIndex + direction;
@@ -83,73 +134,64 @@ function changePage(direction) {
 
 async function previewPage(index) {
     const pageIndex = pageOrder[index];
+    const canvas = document.getElementById('previewCanvas');
+    const context = canvas.getContext('2d');
+
     const pdfBytes = await originalPdfDoc.save();
     const blob = new Blob([pdfBytes], { type: 'application/pdf' });
     const url = URL.createObjectURL(blob);
 
     const loadingTask = pdfjsLib.getDocument(url);
-    loadingTask.promise.then(pdf => {
-        pdf.getPage(pageIndex + 1).then(page => {
-            const canvas = document.getElementById('previewCanvas');
-            const context = canvas.getContext('2d');
-            const viewport = page.getViewport({ scale: 1 });
-            canvas.width = viewport.width;
-            canvas.height = viewport.height;
+    const pdf = await loadingTask.promise;
+    const page = await pdf.getPage(pageIndex + 1);
 
-            const renderContext = {
-                canvasContext: context,
-                viewport: viewport,
-            };
-            page.render(renderContext);
-            URL.revokeObjectURL(url);
-        });
-    }).catch(error => {
-        console.error("Error loading PDF page: ", error);
-    });
+    const viewport = page.getViewport({ scale: 1 });
+    canvas.width = viewport.width;
+    canvas.height = viewport.height;
+
+    const renderContext = {
+        canvasContext: context,
+        viewport: viewport,
+    };
+
+    await page.render(renderContext).promise;
+    URL.revokeObjectURL(url);
 }
 
-document.getElementById('downloadBtn').addEventListener('click', async () => {
-    rearrangedPdfDoc = await PDFLib.PDFDocument.create();
-    
-    for (const pageIndex of pageOrder) {
-        const [copiedPage] = await rearrangedPdfDoc.copyPages(originalPdfDoc, [pageIndex]);
-        rearrangedPdfDoc.addPage(copiedPage);
+async function downloadReorderedPdf() {
+    try {
+        const reorderedPdf = await PDFDocument.create();
+        for (const pageIndex of pageOrder) {
+            const [copiedPage] = await reorderedPdf.copyPages(originalPdfDoc, [pageIndex]);
+            reorderedPdf.addPage(copiedPage);
+        }
+
+        const pdfBytes = await reorderedPdf.save();
+        const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+        const url = URL.createObjectURL(blob);
+
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'reordered.pdf';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    } catch (error) {
+        console.error('Error downloading reordered PDF:', error);
     }
+}
 
-    const pdfBytes = await rearrangedPdfDoc.save();
-    const blob = new Blob([pdfBytes], { type: 'application/pdf' });
-    const url = URL.createObjectURL(blob);
-
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'rearranged.pdf';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+document.addEventListener('DOMContentLoaded', () => {
+    initializePDFReorder();
 });
 
-document.addEventListener('DOMContentLoaded', function () {
-    const prevBtn = document.getElementById('prevBtn');
-    const nextBtn = document.getElementById('nextBtn');
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = {
+        initializePDFReorder,
+        movePage,
+        removePage,
+        updatePageInfo,
+    };
+}
 
-    if (prevBtn) {
-        prevBtn.addEventListener('click', function () {
-            changePage(-1);
-        });
-    }
-    
-    if (nextBtn) {
-        nextBtn.addEventListener('click', function () {
-            changePage(1);
-        });
-    }
-
-    const resetButton = document.getElementById('reset-button');
-    if (resetButton) {
-        resetButton.addEventListener('click', function () {
-            document.getElementById('merged-pdf-preview').innerHTML = '';
-            document.getElementById('download-as-is').style.display = 'none';
-        });
-    }
-});
