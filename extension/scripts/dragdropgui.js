@@ -30,6 +30,7 @@ function preventDefaults(e) {
     e.preventDefault();
     e.stopPropagation();
 }
+module.exports = { preventDefaults };
 
 ['dragenter', 'dragover'].forEach(eventName => {
     dropZone.addEventListener(eventName, () => dropZone.classList.add('hover'), false);
