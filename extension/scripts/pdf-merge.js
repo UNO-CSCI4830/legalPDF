@@ -1,3 +1,4 @@
+// Event listener for the form submission
 document.getElementById('pdf-form').addEventListener('submit', async function (e) {
   e.preventDefault();
 
