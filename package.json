@@ -1,0 +1,19 @@
+{
+  "name": "legalpdf",
+  "version": "1.0.0",
+  "description": "< Legal PDF Tests>",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "keywords": [
+    "Tests",
+    "Jest",
+    "PDF"
+  ],
+  "author": "Jayaun",
+  "license": "ISC",
+  "devDependencies": {
+    "jest": "^29.7.0"
+  }
+}
