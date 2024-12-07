@@ -1,5 +1,8 @@
-// Set up PDF.js worker
-pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.worker.min.js';
+if (typeof chrome !== 'undefined' && chrome.runtime && chrome.runtime.getURL) {
+    pdfjsLib.GlobalWorkerOptions.workerSrc = chrome.runtime.getURL('libs/pdf.worker.min.js');
+} else {
+    pdfjsLib.GlobalWorkerOptions.workerSrc = '../libs/pdf.worker.min.js'; // Adjust the path as needed for standalone HTML
+}
 
 document.getElementById('pdf-upload').addEventListener('change', function (event) {
     console.log('File input triggered');

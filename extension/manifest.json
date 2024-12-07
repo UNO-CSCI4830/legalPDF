@@ -11,7 +11,7 @@
     "activeTab"
   ],
   "background": {
-    "service_worker": "/html/scripts/background.js"
+    "service_worker": "scripts/background.js"
   },
   "action": {
     "default_popup": "html/dashboard.html"
@@ -36,12 +36,15 @@
       "matches": ["<all_urls>"]
     }
   ],
-  "host_permissions": ["<all_urls>"]
+  "host_permissions": ["<all_urls>"],
   "content_scripts": [
     {
-      "js": ["/html/scripts/pdf-merge.js", "/html/scripts/pdf-reorder.js", "/html/scripts/pdf-addtext.js"],
+      "js": [
+        "scripts/pdf-merge.js",
+        "scripts/pdf-reorder.js",
+        "scripts/pdf-addtext.js"
+      ],
       "matches": ["<all_urls>"]
     }
-  ],
-
+  ]
 }
