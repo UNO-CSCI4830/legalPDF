@@ -1,5 +1,5 @@
 let originalPdfDoc;
-let rearrangedPdfDoc;
+let rearrangedPdfDoc = null;
 let pageOrder = [];
 let currentPageIndex = 0;
 
@@ -10,16 +10,27 @@ document.getElementById('fileInput').addEventListener('change', async (event) =>
         originalPdfDoc = await PDFLib.PDFDocument.load(arrayBuffer);
         const numPages = originalPdfDoc.getPageCount();
         pageOrder = Array.from({ length: numPages }, (_, i) => i);
-        currentPageIndex = 0; 
+        currentPageIndex = 0;
 
+        rearrangedPdfDoc = await createReorderedPdf();
         displayPages();
         updatePageInfo();
         document.getElementById('preview').style.display = 'block';
-        document.getElementById('downloadBtn').style.display = 'block';
+        document.getElementById('downloadBtn').style.display = 'inline';
+        document.getElementById('addTextBtn').style.display = 'inline';
     } else {
         alert("Please upload a valid PDF file.");
     }
 });
+
+async function createReorderedPdf() {
+    const newPdfDoc = await PDFLib.PDFDocument.create();
+    for (const pageIndex of pageOrder) {
+        const [copiedPage] = await newPdfDoc.copyPages(originalPdfDoc, [pageIndex]);
+        newPdfDoc.addPage(copiedPage);
+    }
+    return newPdfDoc;
+}
 
 function displayPages() {
     const pdfList = document.getElementById('pdfList');
@@ -46,12 +57,14 @@ function movePage(index, direction) {
     if (newIndex < 0 || newIndex >= pageOrder.length) return;
 
     [pageOrder[index], pageOrder[newIndex]] = [pageOrder[newIndex], pageOrder[index]];
+    rearrangedPdfDoc = null;
     displayPages();
     updatePageInfo();
 }
 
 function removePage(index) {
     pageOrder.splice(index, 1);
+    rearrangedPdfDoc = null;
     displayPages();
     updatePageInfo();
 }
@@ -115,11 +128,7 @@ document.getElementById('nextBtn').addEventListener('click', () => {
 });
 
 document.getElementById('downloadBtn').addEventListener('click', async () => {
-    rearrangedPdfDoc = await PDFLib.PDFDocument.create();
-    for (const pageIndex of pageOrder) {
-        const [copiedPage] = await rearrangedPdfDoc.copyPages(originalPdfDoc, [pageIndex]);
-        rearrangedPdfDoc.addPage(copiedPage);
-    }
+    if (!rearrangedPdfDoc) rearrangedPdfDoc = await createReorderedPdf();
 
     const pdfBytes = await rearrangedPdfDoc.save();
     const blob = new Blob([pdfBytes], { type: 'application/pdf' });
@@ -132,4 +141,20 @@ document.getElementById('downloadBtn').addEventListener('click', async () => {
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
+});
+
+document.getElementById('addTextBtn').addEventListener('click', async () => {
+    if (!rearrangedPdfDoc) rearrangedPdfDoc = await createReorderedPdf();
+
+    const pdfBytes = await rearrangedPdfDoc.save();
+    const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+    const url = URL.createObjectURL(blob);
+
+    if (typeof chrome !== 'undefined' && chrome.runtime && chrome.runtime.getURL) {
+        const pdfAddTextUrl = chrome.runtime.getURL(`../html/pdfaddtext.html?pdfUrl=${encodeURIComponent(url)}`);
+        chrome.tabs.create({ url: pdfAddTextUrl });
+    } else {
+        const pdfAddTextUrl = `../html/pdfaddtext.html?pdfUrl=${encodeURIComponent(url)}`;
+        window.open(pdfAddTextUrl, '_blank');
+    }
 });
