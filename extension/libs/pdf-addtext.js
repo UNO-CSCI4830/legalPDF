@@ -1,5 +1,5 @@
 // Set up PDF.js worker
-pdfjsLib.GlobalWorkerOptions.workerSrc = './pdf.worker.min.js';
+pdfjsLib.GlobalWorkerOptions.workerSrc = '../libs/pdf.worker.min.js';
 
 document.getElementById('pdf-upload').addEventListener('change', function (event) {
     console.log('File input triggered');
