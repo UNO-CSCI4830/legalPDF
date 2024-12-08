@@ -10,11 +10,12 @@ document.getElementById('fileInput').addEventListener('change', async (event) =>
         originalPdfDoc = await PDFLib.PDFDocument.load(arrayBuffer);
         const numPages = originalPdfDoc.getPageCount();
         pageOrder = Array.from({ length: numPages }, (_, i) => i);
+        currentPageIndex = 0; 
 
         displayPages();
         updatePageInfo();
-        document.getElementById('downloadBtn').style.display = 'block';
         document.getElementById('preview').style.display = 'block';
+        document.getElementById('downloadBtn').style.display = 'block';
     } else {
         alert("Please upload a valid PDF file.");
     }
@@ -23,7 +24,6 @@ document.getElementById('fileInput').addEventListener('change', async (event) =>
 function displayPages() {
     const pdfList = document.getElementById('pdfList');
     pdfList.innerHTML = '';
-    
     pageOrder.forEach((pageIndex, i) => {
         const div = document.createElement('div');
         div.classList.add('pdf-page');
@@ -73,14 +73,6 @@ function updatePageInfo() {
     }
 }
 
-function changePage(direction) {
-    const newIndex = currentPageIndex + direction;
-    if (newIndex >= 0 && newIndex < pageOrder.length) {
-        currentPageIndex = newIndex;
-        updatePageInfo();
-    }
-}
-
 async function previewPage(index) {
     const pageIndex = pageOrder[index];
     const pdfBytes = await originalPdfDoc.save();
@@ -108,9 +100,22 @@ async function previewPage(index) {
     });
 }
 
+document.getElementById('prevBtn').addEventListener('click', () => {
+    if (currentPageIndex > 0) {
+        currentPageIndex--;
+        updatePageInfo();
+    }
+});
+
+document.getElementById('nextBtn').addEventListener('click', () => {
+    if (currentPageIndex < pageOrder.length - 1) {
+        currentPageIndex++;
+        updatePageInfo();
+    }
+});
+
 document.getElementById('downloadBtn').addEventListener('click', async () => {
     rearrangedPdfDoc = await PDFLib.PDFDocument.create();
-    
     for (const pageIndex of pageOrder) {
         const [copiedPage] = await rearrangedPdfDoc.copyPages(originalPdfDoc, [pageIndex]);
         rearrangedPdfDoc.addPage(copiedPage);
@@ -122,34 +127,9 @@ document.getElementById('downloadBtn').addEventListener('click', async () => {
 
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'rearranged.pdf';
+    a.download = 'reordered.pdf';
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
-});
-
-document.addEventListener('DOMContentLoaded', function () {
-    const prevBtn = document.getElementById('prevBtn');
-    const nextBtn = document.getElementById('nextBtn');
-
-    if (prevBtn) {
-        prevBtn.addEventListener('click', function () {
-            changePage(-1);
-        });
-    }
-    
-    if (nextBtn) {
-        nextBtn.addEventListener('click', function () {
-            changePage(1);
-        });
-    }
-
-    const resetButton = document.getElementById('reset-button');
-    if (resetButton) {
-        resetButton.addEventListener('click', function () {
-            document.getElementById('merged-pdf-preview').innerHTML = '';
-            document.getElementById('download-as-is').style.display = 'none';
-        });
-    }
 });

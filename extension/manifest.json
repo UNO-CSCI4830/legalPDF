@@ -39,12 +39,9 @@
   "host_permissions": ["<all_urls>"],
   "content_scripts": [
     {
-      "js": [
-        "scripts/pdf-merge.js",
-        "scripts/pdf-reorder.js",
-        "scripts/pdf-addtext.js"
-      ],
-      "matches": ["<all_urls>"]
+      "matches": ["<all_urls>"],
+      "js": ["scripts/content.js"],
+      "run_at": "document_start"
     }
   ]
 }

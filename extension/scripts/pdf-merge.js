@@ -30,19 +30,35 @@ document.getElementById('pdf-form').addEventListener('submit', async function (e
   mergedPreviewElement.innerHTML = '';
   const iframe = document.createElement('iframe');
   iframe.src = mergedPdfUrl;
+  iframe.width = '100%';
+  iframe.height = '500px';
   mergedPreviewElement.appendChild(iframe);
 
   const downloadAsIsButton = document.getElementById('download-as-is');
+  const addTextButton = document.getElementById('addTextMergedBtn');
   downloadAsIsButton.style.display = 'block';
+  addTextButton.style.display = 'block';
+
   downloadAsIsButton.addEventListener('click', function () {
     const a = document.createElement('a');
     a.href = mergedPdfUrl;
     a.download = 'merged.pdf';
     a.click();
   });
+
+  addTextButton.addEventListener('click', function () {
+    if (typeof chrome !== 'undefined' && chrome.runtime && chrome.runtime.getURL) {
+      const pdfAddTextUrl = chrome.runtime.getURL(`../html/pdfaddtext.html?pdfUrl=${encodeURIComponent(mergedPdfUrl)}`);
+      chrome.tabs.create({ url: pdfAddTextUrl });
+    } else {
+      const pdfAddTextUrl = `../html/pdfaddtext.html?pdfUrl=${encodeURIComponent(mergedPdfUrl)}`;
+      window.open(pdfAddTextUrl, '_blank');
+    }
+  });
 });
 
 document.getElementById('reset-button').addEventListener('click', function () {
   document.getElementById('merged-pdf-preview').innerHTML = '';
   document.getElementById('download-as-is').style.display = 'none';
+  document.getElementById('addTextMergedBtn').style.display = 'none';
 });

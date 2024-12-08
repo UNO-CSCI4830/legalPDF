@@ -6,35 +6,35 @@
     <title>Merge PDFs with Preview</title>
     <script src="../libs/pdf-lib.min.js"></script>
     <script src="../scripts/pdf-merge.js" defer></script>
-    <link rel="stylesheet" href="../css/pdfmerge.css">
+    <link rel="stylesheet" href="../css/merge-reorder.css">
 </head>
 <body>
     <div class="container">
         <div class="link-container">
             <a href="../html/pdfreorder.html" class="nav-link">PDF Reorder</a>
             <a href="../html/pdfmerge.html" class="nav-link">PDF Merge</a>
-            <a href="../html/pdfaddtext.html" class="nav-link">PDF Add Text</a>
         </div>
+
+        <h1>Merge Two PDFs</h1>
+
+        <form id="pdf-form">
+            <label for="pdf1">Select first PDF:</label>
+            <input type="file" id="pdf1" accept="application/pdf" required><br><br>
+
+            <label for="pdf2">Select second PDF:</label>
+            <input type="file" id="pdf2" accept="application/pdf" required><br><br>
+
+            <button type="submit" id="mergeButton">Merge PDFs</button>
+            <button type="button" id="reset-button">Reset</button>
+        </form>
+
+        <div id="preview-section">
+            <h2>Preview Merged PDF</h2>
+            <div id="merged-pdf-preview" class="pdf-preview"></div>
+        </div>
+
+        <button id="download-as-is" style="display:none;">Download Merged PDF</button>
+        <button id="addTextMergedBtn" style="display:none;">Add Text to Merged PDF</button>
     </div>
-    <h1>Merge Two PDFs</h1>
-
-    <form id="pdf-form">
-        <label for="pdf1">Select first PDF:</label>
-        <input type="file" id="pdf1" accept="application/pdf" required><br><br>
-
-        <label for="pdf2">Select second PDF:</label>
-        <input type="file" id="pdf2" accept="application/pdf" required><br><br>
-
-        <button type="submit">Merge PDFs</button>
-        <button type="button" id="reset-button">Reset</button>
-    </form>
-
-    <div>
-        <h2>Preview Merged PDF</h2>
-        <div id="merged-pdf-preview" class="pdf-preview"></div>
-    </div>
-
-    <button id="download-as-is" style="display:none">Download Merged PDF</button>
-
 </body>
 </html>
