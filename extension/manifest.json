@@ -36,9 +36,6 @@
       "matches": ["<all_urls>"]
     }
   ],
-<<<<<<< HEAD
-  "host_permissions": ["<all_urls>"]
-=======
   "host_permissions": ["<all_urls>"],
   "content_scripts": [
     {
@@ -47,5 +44,4 @@
       "run_at": "document_start"
     }
   ]
->>>>>>> 708d521a09d89cec2ffc0843d793974564455687
 }
