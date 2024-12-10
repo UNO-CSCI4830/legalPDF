@@ -1,6 +1,6 @@
 <!-- Project Title -->
 
-# LegalPDF
+# LegalPDF Installation Instructions
 
 <!-- Prerequisites -->
 

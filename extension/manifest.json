@@ -36,5 +36,16 @@
       "matches": ["<all_urls>"]
     }
   ],
+<<<<<<< HEAD
   "host_permissions": ["<all_urls>"]
+=======
+  "host_permissions": ["<all_urls>"],
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["scripts/content.js"],
+      "run_at": "document_start"
+    }
+  ]
+>>>>>>> 708d521a09d89cec2ffc0843d793974564455687
 }

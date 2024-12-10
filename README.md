@@ -8,13 +8,7 @@
 
 - [About the Project](#about-the-project)
 
-- [Getting Started](#getting-started)
-
-  - [Prerequisites](#prerequisites)
-
-  - [Installation](#installation)
-
-- [Usage](#usage)
+- [Installation](https://github.com/UNO-CSCI4830/legalPDF/blob/main/Installation.md)
 
 - [Contributing](#contributing)
 
@@ -28,51 +22,6 @@
 
 This project is currently under development. Features and functionality may or may not work and are subject to change.
 It is a requirement for CSCI 4830 at the University of Nebraska at Omaha. The project is a PDF tool meant to allow merging and editing PDF documents in a simple and effective format at a low cost to the consumer.
-
-<!-- Getting Started -->
-
-## Getting Started
-
-To get a local copy up and running follow these simple steps.
-
-<!-- Prerequisites -->
-
-## Prerequisites
-
-Chrome browser is required.
-
-```sh
-https://www.google.com/chrome/
-```
-
-<!-- Installation -->
-
-## Installation
-
-Clone the repository
-
-```sh
-git clone https://github.com/UNO-CSCI4830/legalPDF.git
-```
-Download and install Chrome
-
-Open Chrome Extensions
-
-```sh
-chrome://extensions
-```
-
-Enable Developer Mode in the upper right corner of the page
-
-Click Load Unpacked and browse to the extension folder in the repository
-
-Load the extension
-
-<!-- Usage -->
-
-## Usage
-
-To run the project, click the PDF Tools extension icon
 
 <!-- Contributing -->
 
@@ -100,12 +49,12 @@ Distributed under the MIT License. See [LICENSE](LICENSE) for more information.
 
 ## Contact
 
-Mark Moser - Team Lead
+Mark Moser - Team Lead/Architect
 
-John Wischmeier - Scrum Master
+John Wischmeier - Scrum Master/Scribe/Tech Support
 
-Dio Moreno - Team Developer
+Dio Moreno - Team Developer/Quality assurance
 
-Jayaun Garrett - Team Developer
+Jayaun Garrett - Team Developer/Quality assurance
 
 Project Link: https://github.com/UNO-CSCI4830/legalPDF
