@@ -47,12 +47,12 @@ Distributed under the MIT License. See [LICENSE](LICENSE) for more information.
 
 ## Contact
 
-Mark Moser - Team Lead
+Mark Moser - Team Lead/Architect
 
-John Wischmeier - Scrum Master
+John Wischmeier - Scrum Master/Scribe/Tech Support
 
-Dio Moreno - Team Developer
+Dio Moreno - Team Developer/Quality assurance
 
-Jayaun Garrett - Team Developer
+Jayaun Garrett - Team Developer/Quality assurance
 
 Project Link: https://github.com/UNO-CSCI4830/legalPDF
