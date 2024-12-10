@@ -9,7 +9,7 @@
     width: 100vw;
         }
 
-.pdfContainer {
+#pdfContainer {
     position: relative;
     border: 1px solid black;
     overflow-y: auto; /* Enable vertical scrolling */

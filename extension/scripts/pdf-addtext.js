@@ -151,16 +151,22 @@ document.getElementById('savePdf').addEventListener('click', function () {
                 if (textBoxRect.top >= canvasRect.top && textBoxRect.bottom <= canvasRect.bottom) {
                     const x = ((textBoxRect.left - canvasRect.left) / canvas.width) * imgWidth;
                     const y = ((textBoxRect.top - canvasRect.top) / canvas.height) * imgHeight;
+            
                     const fontFamily = window.getComputedStyle(textBox).fontFamily;
-                    const fontSize = parseInt(window.getComputedStyle(textBox).fontSize, 10);
+                    const fontSize = parseInt(window.getComputedStyle(textBox).fontSize, 10); // Ensure this is declared before use
                     const fontColor = window.getComputedStyle(textBox).color;
+            
+                    const adjustedY = y + fontSize * 0.9;
+            
                     pdf.setFont(fontFamily);
                     pdf.setFontSize(fontSize);
                     const rgb = fontColor.match(/\d+/g).map(Number);
                     pdf.setTextColor(rgb[0], rgb[1], rgb[2]);
-                    pdf.text(textBox.value, x, y);
+                    pdf.text(textBox.value, x, adjustedY);
                 }
             });
+            
+            
             if (pageIndex === pageCanvases.length - 1) {
                 pdf.save('edited.pdf');
             }
