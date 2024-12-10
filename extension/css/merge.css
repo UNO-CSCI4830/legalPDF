@@ -1,13 +1,11 @@
-/* General Styles */
 body {
     margin: 0;
     padding: 0;
     font-family: 'Arial', sans-serif;
-    background-color: #f4f4f9;
+    background: linear-gradient(135deg, #e0f7fa, #33666d);
     color: #333;
 }
 
-/* Container */
 .container {
     max-width: 800px;
     margin: 40px auto;
@@ -17,7 +15,6 @@ body {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* Headings */
 h1 {
     font-size: 28px;
     color: #444;
@@ -25,14 +22,6 @@ h1 {
     margin-bottom: 20px;
 }
 
-h2 {
-    font-size: 22px;
-    color: #555;
-    text-align: center;
-    margin: 20px 0;
-}
-
-/* Navigation Links */
 .link-container {
     text-align: center;
     margin-bottom: 20px;
@@ -45,14 +34,14 @@ h2 {
     padding: 10px 20px;
     margin: 0 10px;
     border-radius: 5px;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, transform 0.2s;
 }
 
 .nav-link:hover {
     background-color: #0056b3;
+    transform: scale(1.05);
 }
 
-/* Form */
 form {
     text-align: center;
     margin-bottom: 20px;
@@ -81,12 +70,15 @@ button {
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease, transform 0.2s;
     margin: 5px;
 }
 
 button:hover {
     background-color: #0056b3;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
 }
 
 button[disabled] {
@@ -95,7 +87,6 @@ button[disabled] {
     cursor: not-allowed;
 }
 
-/* Preview Section */
 .pdf-preview {
     margin: 20px auto;
     width: 100%;
