@@ -8,6 +8,8 @@
 
 - [About the Project](#about-the-project)
 
+- [Installation](https://github.com/UNO-CSCI4830/legalPDF/blob/main/Installation.md)
+
 - [Contributing](#contributing)
 
 - [License](#license)
