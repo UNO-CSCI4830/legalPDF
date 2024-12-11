@@ -23,6 +23,8 @@
 This project is currently under development. Features and functionality may or may not work and are subject to change.
 It is a requirement for CSCI 4830 at the University of Nebraska at Omaha. The project is a PDF tool meant to allow merging and editing PDF documents in a simple and effective format at a low cost to the consumer.
 
+<a href="https://www.flaticon.com/free-icons/pdf" title="pdf icons">Pdf icons created by Deylotus Creative Design - Flaticon</a>
+
 <!-- Contributing -->
 
 ## Contributing
