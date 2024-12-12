@@ -1,0 +1,36 @@
+{
+  "name": "legalpdf",
+  "version": "1.0.0",
+  "description": "package.json for Jest unit testing",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/UNO-CSCI4830/legalPDF.git#John_unittest"
+  },
+  "author": "John Wischmeier",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/UNO-CSCI4830/legalPDF/issues"
+  },
+  "homepage": "https://github.com/UNO-CSCI4830/legalPDF/tree/John_unittest#readme",
+  "devDependencies": {
+    "@testing-library/jest-dom": "^6.0.0",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0"
+  },
+  "jest": {
+    "testEnvironment": "jest-environment-jsdom",
+    "moduleFileExtensions": [
+      "js"
+    ],
+    "testMatch": [
+      "**/__tests__/**/*.test.js"
+    ]
+  },
+  "dependencies": {
+    "pdf-lib": "^1.17.1"
+  }
+}
